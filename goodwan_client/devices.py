@@ -8,10 +8,15 @@ class Device(Basic):
     name = "unknown"
     description = "unknown"
     id = -1
+    is_ping = False   # type: bool
 
     def __init__(self, data):
         self.data = data["data"]
         self.data_ext = data["data_ext"]
+
+    def state_desc(self):
+        """ State description (str) """
+        raise NotImplementedError("State description not implemented")
 
 
 class TempSensor(Device):
@@ -23,6 +28,9 @@ class TempSensor(Device):
     def __init__(self, data):
         Device.__init__(self, data)
         self.temp = float(self.data)
+
+    def state_desc(self):
+        return "temperature: {}".format(self.temp)
 
 
 class OrderButton(Device):
@@ -37,9 +45,13 @@ class OrderButton(Device):
         Device.__init__(self, data)
         self.state = int(self.data)
         if self.state < 0 or self.state > 1:
-            raise ValueError("Wrong order button state value {}".format(state))
+            raise ValueError("Wrong order button state value {}"
+                             .format(self.state))
         self.is_cancel = bool(self.state)
         self.is_order = not self.is_cancel
+
+    def state_desc(self):
+        return "order" if self.is_order else "cancel"
 
 
 class PulseSensor(Device):
@@ -57,6 +69,9 @@ class PulseSensor(Device):
         except ValueError:
             pass
 
+    def state_desc(self):
+        return "pulse 1: {}, pulse2: {}".format(self.pulse1, self.pulse2)
+
 
 class LevelSensor(Device):
     name = "level_sensor"
@@ -67,6 +82,9 @@ class LevelSensor(Device):
     def __init__(self, data):
         Device.__init__(self, data)
         self.level = float(self.data)
+
+    def state_desc(self):
+        return "level: {}".format(self.level)
 
 
 class VibrationSensor(Device):
@@ -81,11 +99,17 @@ class VibrationSensor(Device):
         self.freq = float(self.data)
         self.freq = float(self.data)
 
+    def state_desc(self):
+        return "freq: {}, amp: {}".format(self.freq, self.amp)
+
 
 class DoorSensor(Device):
     name = "door_sensor"
     description = "Датчик двери"
     id = 106
+
+    def state_desc(self):
+        return "open"
 
 
 class PassiveInfraredSensor(Device):
@@ -100,9 +124,13 @@ class PassiveInfraredSensor(Device):
         Device.__init__(self, data)
         self.state = int(self.data)
         if self.state < 0 or self.state > 1:
-            raise ValueError("Wrong order button state value {}".format(state))
+            raise ValueError("Wrong infrared sensor state value {}"
+                             .format(self.state))
         self.is_ping = bool(self.state)
         self.is_triggered = not self.is_triggered
+
+    def state_desc(self):
+        return "triggered" if self.is_triggered else "ping"
 
 
 class Seal(Device):
@@ -117,9 +145,13 @@ class Seal(Device):
         Device.__init__(self, data)
         self.state = int(self.data)
         if self.state < 0 or self.state > 1:
-            raise ValueError("Wrong order button state value {}".format(state))
+            raise ValueError("Wrong order seal state value {}"
+                             .format(self.state))
         self.is_triggered = bool(self.state)
         self.is_ping = not self.is_triggered
+
+    def state_desc(self):
+        return "triggered" if self.is_triggered else "ping"
 
 
 class Tracker(Device):
@@ -136,18 +168,29 @@ class Tracker(Device):
         Device.__init__(self, data)
         self.state = int(self.data)
         if self.state < 0 or self.state > 1:
-            raise ValueError("Wrong order button state value {}".format(state))
+            raise ValueError("Wrong tracker state value {}"
+                             .format(self.state))
         self.is_position = bool(self.state)
         self.is_alert = not self.is_position
         if self.is_position:
             pos_data = self.data_ext
             (self.lon, self.lat) = (s.strip() for s in pos_data.split(","))
 
+    def state_desc(self):
+        if self.is_position:
+            return "position: lat {} lon {}".format(self.lat, self.lon)
+        else:
+            return "alert"
+
 
 class Pinger(Device):
     name = "pinger"
     description = "Тестер сети"
     id = 110
+    is_ping = True
+
+    def state_desc(self):
+        return "ping"
 
 
 DEVICES_BY_ID = {d.id: d for d in globals().values()

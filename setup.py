@@ -11,7 +11,7 @@ setup(
     include_package_data=True,
     description='GoodWan IoT client module',
     long_description=README,
-    version='0.1',
+    version='0.2',
     url='https://github.com/kanavis/goodwan_client',
     license='MIT',
     classifiers=[
