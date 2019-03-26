@@ -7,7 +7,7 @@ import logging
 import requests.exceptions
 from pytz import timezone
 
-from goodwan_client.classes import Event
+from goodwan_client.event import Event
 from goodwan_client.errors import CommunicationError, ParseError, ProtocolError
 from goodwan_client.helpers import datetime_to_str
 from goodwan_client.serializer import Serializer

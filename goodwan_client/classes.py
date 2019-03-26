@@ -1,8 +1,6 @@
 """
 GoodWan client library: classes
 """
-import datetime
-from goodwan_client.serializer import DateTimeField
 
 
 class Basic:
@@ -18,15 +16,3 @@ class Basic:
                 if not k.startswith("__")
             )
         )
-
-
-class Event(Basic):
-    """ Event class """
-    id_event = int                  # type: int
-    id_system = str                 # type: str
-    id_transmitter = int            # type: int
-    data_type = int                 # type: int
-    data = str                      # type: str
-    data_ext = str                  # type: str
-    signal_lvl = int                # type: int
-    timestamp = DateTimeField       # type: datetime.datetime
