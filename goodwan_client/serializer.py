@@ -100,7 +100,7 @@ class DeviceGenerator(GeneratedField):
         """
         for k in ("data_type", "data", "data_ext"):
             if k not in all_data:
-                logging.warning("Got packet without data_type")
+                logger.warning("Got packet without data_type")
                 return None
 
         device_id = all_data["data_type"]
@@ -110,11 +110,11 @@ class DeviceGenerator(GeneratedField):
             try:
                 return cls(all_data)
             except (ValueError, TypeError) as err:
-                logging.exception("Error parsing data for device {}: {}"
+                logger.exception("Error parsing data for device {}: {}"
                                   .format(cls.name, err))
                 return None
         else:
-            logging.warning("Unsupported device id {}".format(device_id))
+            logger.warning("Unsupported device id {}".format(device_id))
             return None
 
 
