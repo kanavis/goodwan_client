@@ -10,6 +10,7 @@ setup(
     packages=['goodwan_client'],
     include_package_data=True,
     description='GoodWan IoT client module',
+    long_description_content_type="text/markdown",
     long_description=README,
     version='0.2.1',
     url='https://github.com/kanavis/goodwan_client',
